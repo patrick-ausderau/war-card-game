@@ -20,10 +20,35 @@
 
 package org.ausderau;
 
+import org.ausderau.model.Card;
 import org.ausderau.model.Deck;
+import org.ausderau.view.Menu;
+
+import java.util.*;
 
 public class Main {
     static void main() {
-        Deck.getCards().forEach(IO::println);
+        int menuItem;
+        List<Card> deck = new ArrayList<>(Deck.getCards());
+        ResourceBundle bundle = ResourceBundle.getBundle("Message", Locale.getDefault());
+        Scanner scanner = new Scanner(System.in);
+        do {
+            IO.println(Menu.printMainMenu(bundle));
+            try {
+                menuItem = scanner.nextInt();
+                switch (menuItem) {
+                    case 1:
+                        deck.forEach(card -> IO.print(card.getDisplay()));
+                        IO.println();
+                        break;
+                    case 2:
+                        Collections.shuffle(deck);
+                        break;
+                    default: return;
+                }
+            } catch (NoSuchElementException | IllegalStateException exception) {
+                return;
+            }
+        } while (true);
     }
 }

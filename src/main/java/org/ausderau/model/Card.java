@@ -20,42 +20,93 @@
 package org.ausderau.model;
 
 public class Card {
+    /**
+     * ace -> 13, king -> 12,…
+     */
     private int value;
+    /**
+     * club, diamond, heart or spade
+     */
     private String color;
+    /**
+     * card character like 🂡, 🂽, 🃇, 🃚,…
+     */
     private String display;
 
+    /**
+     * Construct a card with initial values.
+     *
+     * @param value integer value: ace -> 13, king -> 12,…
+     * @param color one of 'club', 'diamond', 'heart' or 'spade'
+     * @param display character representation like '🂡', '🂽', '🃇', '🃚',…
+     */
     public Card(int value, String color, String display) {
         this.value = value;
         this.color = color;
         this.display = display;
     }
 
+    /**
+     * Returns the value of the card.
+     *
+     * @return the integer value: ace -> 13, king -> 12, queen -> 11,…
+     */
     public int getValue() {
         return value;
     }
 
+    /**
+     * Replace the value of the card.
+     *
+     * @param value value to be set: ace -> 13, king -> 12, queen -> 11,…
+     */
     public void setValue(int value) {
         this.value = value;
     }
 
+    /**
+     * Returns the color's name of the card.
+     *
+     * @return the color of the card
+     */
     public String getColor() {
         return color;
     }
 
+    /**
+     * Replace the color of the card.
+     *
+     * @param color color's name to be set, one of 'club', 'diamond', 'heart' or 'spade'
+     */
     public void setColor(String color) {
         this.color = color;
     }
 
+    /**
+     * Returns the display's character of the card.
+     *
+     * @return the display's character of the card
+     */
     public String getDisplay() {
         return display;
     }
 
+    /**
+     * Replace the display's character of the card.
+     *
+     * @param display display's character to be set, like '🂡', '🂽', '🃇', '🃚',…
+     */
     public void setDisplay(String display) {
         this.display = display;
     }
 
+    /**
+     * Returns a string representation of the card. Text with the class name, value, color and display.
+     *
+     * @return a string representation of the card
+     */
     @Override
     public String toString() {
-        return String.format("Card{value: %2d, color: '%s', display: '%s'}", value, color, display);
+        return String.format("%s{value: %2d, color: '%s', display: '%s'}", getClass().getSimpleName(), value, color, display);
     }
 }
