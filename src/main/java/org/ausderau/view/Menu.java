@@ -23,17 +23,48 @@ import java.util.ResourceBundle;
 
 public class Menu {
 
+    /**
+     * Returns a string with stars characters '*' with the text in the middle.
+     *
+     * @param text text to add in the middle of the stars
+     * @return a string with text in middle of stars if text's length is shorter than 50
+     */
     private static String printStar(String text) {
         int n = 50 - text.length() / 2;
         return "*".repeat(n) + text + "*".repeat(n - (text.length() % 2 == 0 ? 0 : 1));
     }
+
+    /**
+     * Returns a string of 50 stars '*' characters
+     *
+     * @return a string with 50 stars
+     */
     private static String printStar() {
         return printStar("");
     }
 
+    /**
+     * Returns a string with item text for the main menu
+     *
+     * @param bundle for internationalization
+     * @return a string of text representing the main menu
+     */
     public static String printMainMenu(ResourceBundle bundle) {
-        return String.format("%s\n%s\n%s\n%s\n%s\n", printStar(bundle.getString("menu.main.title")),
+        return String.format("%s\n%s\n%s\n%s\n%s\n%s\n%s\n", printStar(bundle.getString("menu.main.title")),
                              bundle.getString("menu.main.show"), bundle.getString("menu.main.shuffle"),
+                             bundle.getString("menu.main.start"), bundle.getString("menu.main.startSame"),
                              bundle.getString("menu.main.quit"), printStar());
+    }
+
+    /**
+     * Returns a string with item text for the game menu
+     *
+     * @param bundle for internationalization
+     * @return a string of text representing the game menu
+     */
+    public static String printGameMenu(ResourceBundle bundle) {
+        return String.format("%s\n%s\n%s\n%s\n%s\n", printStar(bundle.getString("menu.game.title")),
+                             bundle.getString("menu.game.playNext"), bundle.getString("menu.game.show"),
+                             bundle.getString("menu.game.automate"), printStar());
     }
 }

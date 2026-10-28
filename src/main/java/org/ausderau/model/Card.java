@@ -34,6 +34,13 @@ public class Card {
     private String display;
 
     /**
+     *  Construct an empty card
+     */
+    public Card() {
+        this.value = -1;
+    }
+
+    /**
      * Construct a card with initial values.
      *
      * @param value integer value: ace -> 13, king -> 12,…
