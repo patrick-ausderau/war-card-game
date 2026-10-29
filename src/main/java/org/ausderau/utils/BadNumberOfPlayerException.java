@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.ausderau.utlis;
+package org.ausderau.utils;
 
 public class BadNumberOfPlayerException extends Exception {
 

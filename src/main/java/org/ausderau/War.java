@@ -22,9 +22,8 @@ package org.ausderau;
 
 import org.ausderau.controller.Game;
 import org.ausderau.model.Card;
-import org.ausderau.model.Deck;
-import org.ausderau.utlis.BadNumberOfPlayerException;
-import org.ausderau.utlis.CardUtlis;
+import org.ausderau.utils.BadNumberOfPlayerException;
+import org.ausderau.utils.CardUtils;
 import org.ausderau.view.Menu;
 
 import java.util.*;
@@ -35,7 +34,7 @@ public class War {
         // Read user menu choice input
         int menuItem;
         // Deck of cards to play with
-        List<Card> deck = new ArrayList<>(Deck.getCards());
+        List<Card> deck = new ArrayList<>(CardUtils.getDeck());
         // Internationalization, currently support French/English
         ResourceBundle bundle = ResourceBundle.getBundle("Message", Locale.getDefault());
         Scanner scanner = new Scanner(System.in);
@@ -46,7 +45,7 @@ public class War {
                 scanner.nextLine(); //flush new-line (e.g. if user input text after number)
                 switch (menuItem) {
                     case 1:
-                        IO.println(CardUtlis.printCardsArray(deck));
+                        IO.println(CardUtils.printCardsArray(deck));
                         break;
                     case 2:
                         Collections.shuffle(deck);

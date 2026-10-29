@@ -20,10 +20,9 @@
 package org.ausderau.controller;
 
 import org.ausderau.model.Card;
-import org.ausderau.model.Deck;
 import org.ausderau.model.Player;
-import org.ausderau.utlis.BadNumberOfPlayerException;
-import org.ausderau.utlis.CardUtlis;
+import org.ausderau.utils.BadNumberOfPlayerException;
+import org.ausderau.utils.CardUtils;
 import org.ausderau.view.Menu;
 
 import java.util.*;
@@ -35,15 +34,17 @@ public class Game {
      */
     private static List<Player> players;
     /**
+     * Card deck to be used for the current game. Allow to use another deck, e.g. a 32 cards deck,…
+     */
+    private static List<Card> gameDeck;
+    /**
      * List of winner of the game.
      * If size equals one, there is a winner. If size is bigger the game ends in draw (no winner).
      */
     private static List<Player> winner;
 
     // store the players who play the biggest card, if only one, s/he is the winner, multiple means war
-    private static List<Player> trickWinnerOrWar = new ArrayList<>();
-    // last played card during a trick or biggest card of a war
-    private static Card card, biggest;
+    private static final List<Player> trickWinnerOrWar = new ArrayList<>();
 
     /**
      * Initialize the number of players for a new game.
@@ -72,7 +73,7 @@ public class Game {
      *
      * @param numberOfPlayer amount of players to add to the list
      */
-    public static void initPlayersName(int numberOfPlayer) {
+    private static void initPlayersName(int numberOfPlayer) {
         players = new ArrayList<>();
         for(int i = 0; i < numberOfPlayer; i++) {
             players.add(new Player("" + (i + 1)));
@@ -88,8 +89,9 @@ public class Game {
     public static void initGameDeal(List<Card> deck) throws BadNumberOfPlayerException {
         if(null == players || players.size() < 2 || players.size() > 10) throw new BadNumberOfPlayerException();
         for(int i = 0; i < players.size(); i++) {
-            players.get(i).setHand(CardUtlis.dealCards(deck, i, players.size()));
+            players.get(i).setHand(CardUtils.dealCards(deck, i, players.size()));
         }
+        gameDeck = deck;
     }
 
     public static void playGame(ResourceBundle bundle, Scanner scanner) {
@@ -115,7 +117,9 @@ public class Game {
                 case 3:
                     while (!isGameEnding(bundle)) {
                         playTrick(bundle);
+                        printPlayersWithHand(bundle);
                     }
+                    CardUtils.printCardsArray(gameDeck);
                     return;
                 default:
                     break;
@@ -132,6 +136,8 @@ public class Game {
     private static void playTrick(ResourceBundle bundle) {
         trickWinnerOrWar.clear();
         // if the player still has cards, play the first card from its hand
+        // last played card during a trick or biggest card of a war
+        Card card, biggest;
         for(Player player : players) {
             if(!player.getHand().isEmpty()) {
                 card = player.playCard();
@@ -167,7 +173,7 @@ public class Game {
         }
         IO.println(bundle.getString("game.trick.winner") + trickWinnerOrWar.getFirst().getName());
         // check if the player is the winner of the game
-        if(trickWinnerOrWar.getFirst().getHand().size() == Deck.getCards().size()) {
+        if(trickWinnerOrWar.getFirst().getHand().size() == gameDeck.size()) {
             winner.add(trickWinnerOrWar.getFirst());
         }
     }
@@ -178,14 +184,15 @@ public class Game {
      * @return true if the game is over
      */
     private static boolean isGameEnding(ResourceBundle bundle) {
+        if(null == winner || winner.isEmpty()) {
+            return false;
+        }
         if(winner.size() > 1) {
             IO.println(bundle.getString("game.draw"));
-            return true;
-        } else if (winner.size() == 1) {
+        } else {
             IO.println(bundle.getString("game.winner") + winner.getFirst().getName());
-            return true;
         }
-        return false;
+        return true;
     }
 
     /**
@@ -193,8 +200,8 @@ public class Game {
      *
      * @param bundle for internationalization
      */
-    public static void printPlayersWithHand(ResourceBundle bundle) {
-        players.forEach(player -> IO.println(CardUtlis.printPlayer(player.getName(), player.getHand(), bundle)));
+    private static void printPlayersWithHand(ResourceBundle bundle) {
+        players.forEach(player -> IO.println(CardUtils.printPlayer(player.getName(), player.getHand(), bundle)));
     }
 
     /**
@@ -202,7 +209,7 @@ public class Game {
      *
      * @param bundle for internationalization
      */
-    public static void printTrick(ResourceBundle bundle) {
-        players.forEach(player -> IO.println(CardUtlis.printPlayer(player.getName(), player.getTrickCards(), bundle)));
+    private static void printTrick(ResourceBundle bundle) {
+        players.forEach(player -> IO.println(CardUtils.printPlayer(player.getName(), player.getTrickCards(), bundle)));
     }
 }
