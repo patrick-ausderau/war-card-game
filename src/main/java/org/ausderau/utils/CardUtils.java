@@ -20,9 +20,13 @@
 package org.ausderau.utils;
 
 import org.ausderau.model.Card;
+import org.ausderau.model.Player;
 
 import java.util.*;
 
+/**
+ * Provides methods to manipulate cards and deck
+ */
 public class CardUtils {
 
     /**
@@ -67,12 +71,18 @@ public class CardUtils {
      * @param numberOfPlayer the number of player as a step to deal all the n<sup>th</sup> card to the current player
      * @return an ordered list of cards based on the order of the deck
      */
-    public static Queue<Card> dealCards(List<Card> deck, int start, int numberOfPlayer) {
+    private static Queue<Card> dealCards(List<Card> deck, int start, int numberOfPlayer) {
         Queue<Card> hand = new LinkedList<>();
         for (int i = start; i < deck.size(); i += numberOfPlayer) {
             hand.add(deck.get(i));
         }
         return hand;
+    }
+
+    public static void dealCards(List<Player> players, List<Card> deck) {
+        for(int i = 0; i < players.size(); i++) {
+            players.get(i).setHand(dealCards(deck, i, players.size()));
+        }
     }
 
     /**
@@ -95,5 +105,23 @@ public class CardUtils {
      */
     public static String printPlayer(String name, Collection<Card> cards, ResourceBundle bundle) {
         return String.format("%s%s: %s", bundle.getString("player"), name, printCardsArray(cards));
+    }
+
+    /**
+     * Prints to console the list of players with their cards at hand.
+     *
+     * @param bundle for internationalization
+     */
+    public static void printPlayersWithHand(Collection<Player> players, ResourceBundle bundle) {
+        players.forEach(player -> IO.println(printPlayer(player.getName(), player.getHand(), bundle)));
+    }
+
+    /**
+     * Prints to console the list of players with their played cards.
+     *
+     * @param bundle for internationalization
+     */
+    public static void printTrick(Collection<Player> players, ResourceBundle bundle) {
+        players.forEach(player -> IO.println(printPlayer(player.getName(), player.getTrickCards(), bundle)));
     }
 }

@@ -19,8 +19,14 @@
 
 package org.ausderau.view;
 
+import java.util.Arrays;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+/**
+ * Provides text to be print to show menu to end user with internationalization
+ */
 public class Menu {
 
     /**
@@ -43,6 +49,11 @@ public class Menu {
         return printStar("");
     }
 
+    private static String printMenu(String title, String... menuItems) {
+        return Stream.concat(Stream.concat(Stream.of(printStar(title)), Arrays.stream(menuItems)),
+                                 Stream.of(printStar())).collect(Collectors.joining( "\n"));
+    }
+
     /**
      * Returns a string with item text for the main menu
      *
@@ -50,10 +61,10 @@ public class Menu {
      * @return a string of text representing the main menu
      */
     public static String printMainMenu(ResourceBundle bundle) {
-        return String.format("%s\n%s\n%s\n%s\n%s\n%s\n%s\n", printStar(bundle.getString("menu.main.title")),
-                             bundle.getString("menu.main.show"), bundle.getString("menu.main.shuffle"),
-                             bundle.getString("menu.main.start"), bundle.getString("menu.main.startSame"),
-                             bundle.getString("menu.main.quit"), printStar());
+        return printMenu(bundle.getString("menu.main.title"),  bundle.getString("menu.main.show"),
+                         bundle.getString("menu.main.shuffle"), bundle.getString("menu.main.start"),
+                         bundle.getString("menu.main.startSame"), bundle.getString("menu.main.saved"),
+                         bundle.getString("menu.main.quit"));
     }
 
     /**
@@ -63,8 +74,12 @@ public class Menu {
      * @return a string of text representing the game menu
      */
     public static String printGameMenu(ResourceBundle bundle) {
-        return String.format("%s\n%s\n%s\n%s\n%s\n", printStar(bundle.getString("menu.game.title")),
-                             bundle.getString("menu.game.playNext"), bundle.getString("menu.game.show"),
-                             bundle.getString("menu.game.automate"), printStar());
+        return printMenu(bundle.getString("menu.game.title"), bundle.getString("menu.game.playNext"),
+                         bundle.getString("menu.game.show"), bundle.getString("menu.game.automate"));
+    }
+
+    public static String printDatabaseMenu(ResourceBundle bundle) {
+        return printMenu(bundle.getString("menu.db.title"), bundle.getString("menu.db.show10"),
+                         bundle.getString("menu.db.showId"), bundle.getString("menu.db.back"));
     }
 }

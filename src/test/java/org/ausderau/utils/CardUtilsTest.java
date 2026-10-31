@@ -22,10 +22,7 @@ package org.ausderau.utils;
 import org.ausderau.model.Card;
 import org.ausderau.model.Player;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import static org.ausderau.TestConst.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -45,11 +42,20 @@ class CardUtilsTest {
     @org.junit.jupiter.api.Test
     void dealCards() {
        // 3 players
-        assertIterableEquals(List.of(kingOfSpade, sevenOfDiamond, aceOfSpade, kingOfClub), CardUtils.dealCards(smallDeck, 0 , 3));
-        assertIterableEquals(List.of(tenOfHeart, kingOfHeart, sevenOfClub), CardUtils.dealCards(smallDeck, 1, 3));
-        assertIterableEquals(List.of(queenOfHeart, tenOfClub, sevenOfSpade), CardUtils.dealCards(smallDeck, 2, 3));
+        List<Player> players = List.of(new Player("foo"), new Player("bar"), new Player("baz"));
+        CardUtils.dealCards(players, smallDeck);
+        assertIterableEquals(List.of(kingOfSpade, sevenOfDiamond, aceOfSpade, kingOfClub), players.getFirst().getHand());
+        assertIterableEquals(List.of(tenOfHeart, kingOfHeart, sevenOfClub), players.get(1).getHand());
+        assertIterableEquals(List.of(queenOfHeart, tenOfClub, sevenOfSpade), players.getLast().getHand());
         // more players than cards?
-        assertTrue(CardUtils.dealCards(smallDeck, 11, 13).isEmpty());
+        List<Player> playersBig = new ArrayList<>();
+        for(int i = 0; i < 13; i++) {
+            playersBig.add(new Player("foo" + (i + 1)));
+        }
+        CardUtils.dealCards(playersBig, smallDeck);
+        assertIterableEquals(List.of(kingOfSpade), playersBig.getFirst().getHand());
+        assertFalse(playersBig.get(9).getHand().isEmpty());
+        assertTrue(playersBig.get(11).getHand().isEmpty());
     }
 
     @org.junit.jupiter.api.Test

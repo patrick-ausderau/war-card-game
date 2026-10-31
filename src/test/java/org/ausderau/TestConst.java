@@ -38,10 +38,10 @@ public class TestConst {
     public static final Card sevenOfClub = new Card(6, "club", "🃗");
     public static final Card tenOfClub = new Card(9, "club", "🃚");
     public static final Card tenOfHeart = new Card(9, "heart", "🂺");
-    // test for a 2 player game with one war and player 2 win
+    // test for a 2 player game with one war and player2 win
     public static final List<Card> winnerDeck = List.of(kingOfHeart, aceOfSpade, sevenOfSpade, sevenOfClub, tenOfClub,
                                                         queenOfHeart, sevenOfDiamond, kingOfSpade);
-    // will generate a draw game with 3 players
+    // to test the print output
     public static final List<Card> smallDeck = List.of(kingOfSpade, tenOfHeart, queenOfHeart, sevenOfDiamond, kingOfHeart,
                                                        tenOfClub, aceOfSpade, sevenOfClub, sevenOfSpade, kingOfClub);
 

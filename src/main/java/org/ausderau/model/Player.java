@@ -19,17 +19,35 @@
 
 package org.ausderau.model;
 
+import jakarta.persistence.*;
+
 import java.util.*;
 
+/**
+ * Represents a player for a war game
+ */
+@Entity
 public class Player {
+    /**
+     * player's identifier for database storage
+     */
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private long id;
     /**
      * player's unique name
      */
     private String name;
     /**
-     * player's cards
+     * Player's cards in hand.
+     * Was a Queue to ensure order and to use poll(); but was throwing an exception when stored in database.
      */
+    @Transient
     private Queue<Card> hand = new LinkedList<>();
+    /**
+     * player's played cards during a trick
+     */
+    @Transient
     private List<Card> trickCards = new LinkedList<>();
 
     /**
@@ -54,6 +72,14 @@ public class Player {
         super();
         this.name = name;
         this.hand = hand;
+    }
+
+    /**
+     * Returns the unique identifier of the player.
+     * @return the player's database identifier
+     */
+    public long getId() {
+        return id;
     }
 
     /**
@@ -109,15 +135,6 @@ public class Player {
      */
     public void setTrickCards(List<Card> trickCards) {
         this.trickCards = trickCards;
-    }
-
-    /**
-     * Add a card at the end of the player's hand.
-     *
-     * @param card the card to add to player's hand
-     */
-    public void addCardToHand(Card card) {
-        hand.add(card);
     }
 
     /** Add many cards at the end of the player's hand.

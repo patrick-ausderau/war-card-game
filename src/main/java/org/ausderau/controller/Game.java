@@ -21,12 +21,16 @@ package org.ausderau.controller;
 
 import org.ausderau.model.Card;
 import org.ausderau.model.Player;
+import org.ausderau.model.Statistics;
 import org.ausderau.utils.BadNumberOfPlayerException;
 import org.ausderau.utils.CardUtils;
 import org.ausderau.view.Menu;
 
 import java.util.*;
 
+/**
+ * Controls a game form initialization, play and winning conditions
+ */
 public class Game {
 
     /**
@@ -42,9 +46,14 @@ public class Game {
      * If size equals one, there is a winner. If size is bigger the game ends in draw (no winner).
      */
     private static List<Player> winner;
-
-    // store the players who play the biggest card, if only one, s/he is the winner, multiple means war
+    /**
+     * Store the players who play the biggest card during a trick. If only one, s/he is the winner, multiple means war.
+     */
     private static final List<Player> trickWinnerOrWar = new ArrayList<>();
+    /**
+     * Number of tricks played during this game. Used for statistics.
+     */
+    private static Statistics statistics;
 
     /**
      * Initialize the number of players for a new game.
@@ -88,17 +97,23 @@ public class Game {
      */
     public static void initGameDeal(List<Card> deck) throws BadNumberOfPlayerException {
         if(null == players || players.size() < 2 || players.size() > 10) throw new BadNumberOfPlayerException();
-        for(int i = 0; i < players.size(); i++) {
-            players.get(i).setHand(CardUtils.dealCards(deck, i, players.size()));
-        }
+        CardUtils.dealCards(players, deck);
         gameDeck = deck;
     }
 
+    /**
+     * Play the game. Show the menu and control the actions based on user choices.
+     *
+     * @param bundle for internationalization
+     * @param scanner for user input
+     */
     public static void playGame(ResourceBundle bundle, Scanner scanner) {
         // read user menu choice input
         int menuItem;
         winner = new ArrayList<>();
-        do {
+        // prepare the statistics to be saved in database
+        statistics = new Statistics(players, gameDeck);
+        while(true) {
             IO.println(Menu.printGameMenu(bundle));
             try {
                 menuItem = scanner.nextInt();
@@ -112,19 +127,20 @@ public class Game {
                     if(isGameEnding(bundle)) return;
                     break;
                 case 2:
-                    printPlayersWithHand(bundle);
+                    IO.println(bundle.getString("game.player.hand"));
+                    CardUtils.printPlayersWithHand(players, bundle);
                     break;
                 case 3:
                     while (!isGameEnding(bundle)) {
                         playTrick(bundle);
-                        printPlayersWithHand(bundle);
+                        IO.println(bundle.getString("game.player.hand"));
+                        CardUtils.printPlayersWithHand(players, bundle);
                     }
-                    CardUtils.printCardsArray(gameDeck);
                     return;
                 default:
                     break;
             }
-        } while (true);
+        }
     }
 
     /**
@@ -138,6 +154,8 @@ public class Game {
         // if the player still has cards, play the first card from its hand
         // last played card during a trick or biggest card of a war
         Card card, biggest;
+        // one more trick
+        statistics.incrementNumberOfTricks();
         for(Player player : players) {
             if(!player.getHand().isEmpty()) {
                 card = player.playCard();
@@ -151,11 +169,14 @@ public class Game {
         }
         // until there is more than one player with the biggest card, there is war
         while (trickWinnerOrWar.size() > 1) {
+            statistics.incrementNumberOfWars();
             biggest = new Card();
             // check if the players still have cards to participate in war, otherwise, the game ends with no winner
             for (Player player : trickWinnerOrWar) {
                 if(player.getHand().isEmpty()) {
                     winner = trickWinnerOrWar;
+                    IO.println(bundle.getString("game.trick.play") + " " + statistics.getNumberOfTricks());
+                    CardUtils.printTrick(players, bundle);
                     return;
                 }
                 card = player.playCard();
@@ -164,13 +185,20 @@ public class Game {
             Card finalBiggest = biggest;
             trickWinnerOrWar.removeIf(player -> player.getTrickCards().getLast().getValue() < finalBiggest.getValue());
         }
-        printTrick(bundle);
+        IO.println(bundle.getString("game.trick.play") + " " + statistics.getNumberOfTricks());
+        CardUtils.printTrick(players, bundle);
         // give all trick cards to winner
+        List<Card> tricksCards = new ArrayList<>();
         for (Player player : players) {
             if(!player.getTrickCards().isEmpty()) {
-                trickWinnerOrWar.getFirst().addCardsToHand(player.resetTrickCards());
+                tricksCards.addAll(player.resetTrickCards());
+                //trickWinnerOrWar.getFirst().addCardsToHand(player.resetTrickCards());
             }
         }
+        // Put the trick cards in random order at the end of the winning player's hand. Keeping the order was generating
+        // infinite loop.
+        Collections.shuffle(tricksCards);
+        trickWinnerOrWar.getFirst().addCardsToHand(tricksCards);
         IO.println(bundle.getString("game.trick.winner") + trickWinnerOrWar.getFirst().getName());
         // check if the player is the winner of the game
         if(trickWinnerOrWar.getFirst().getHand().size() == gameDeck.size()) {
@@ -190,26 +218,10 @@ public class Game {
         if(winner.size() > 1) {
             IO.println(bundle.getString("game.draw"));
         } else {
+            statistics.setWinner(winner.getFirst().getName());
             IO.println(bundle.getString("game.winner") + winner.getFirst().getName());
         }
+        Database.creatStatistics(statistics);
         return true;
-    }
-
-    /**
-     * Prints to console the list of players with their cards at hand.
-     *
-     * @param bundle for internationalization
-     */
-    private static void printPlayersWithHand(ResourceBundle bundle) {
-        players.forEach(player -> IO.println(CardUtils.printPlayer(player.getName(), player.getHand(), bundle)));
-    }
-
-    /**
-     * Prints to console the list of players with their played cards.
-     *
-     * @param bundle for internationalization
-     */
-    private static void printTrick(ResourceBundle bundle) {
-        players.forEach(player -> IO.println(CardUtils.printPlayer(player.getName(), player.getTrickCards(), bundle)));
     }
 }

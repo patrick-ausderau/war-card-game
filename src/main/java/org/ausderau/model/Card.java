@@ -19,9 +19,24 @@
 
 package org.ausderau.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
 import java.util.Objects;
 
+/**
+ * Represents a playing cards
+ */
+@Entity
 public class Card {
+    /**
+     * card's identifier for database
+     */
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private long id;
     /**
      * ace -> 13, king -> 12,…
      */
@@ -56,9 +71,18 @@ public class Card {
     }
 
     /**
+     * Returns the unique identifier for this card.
+     *
+     * @return the card's database identifier
+     */
+    public long getId() {
+        return id;
+    }
+
+    /**
      * Returns the value of the card.
      *
-     * @return the integer value: ace -> 13, king -> 12, queen -> 11,…
+     * @return the integer card's value: ace -> 13, king -> 12, queen -> 11,…
      */
     public int getValue() {
         return value;

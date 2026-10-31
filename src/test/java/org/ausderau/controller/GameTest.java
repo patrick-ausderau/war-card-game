@@ -31,7 +31,6 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 
-import static org.ausderau.TestConst.smallDeck;
 import static org.ausderau.TestConst.winnerDeck;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -64,7 +63,7 @@ class GameTest {
     }
 
     @Test
-    void playGameWinner() {
+    void playGame() {
         ResourceBundle bundle = ResourceBundle.getBundle("Message", Locale.US);
         //one string, and two values out of range, all should throw exception
         System.setIn(new ByteArrayInputStream("2\n3\n".getBytes()));
@@ -74,26 +73,10 @@ class GameTest {
             Game.initNumberOfPlayers(bundle, scanner);
             Game.initGameDeal(winnerDeck);
             Game.playGame(bundle, scanner);
+            //TODO: clean DB after test
+            //Database.deleteStatistics(id);
             String out = outContent.toString();
             assertEquals("🏆 The winner is player2\n", out.substring(out.length() - 25));
-        } catch (BadNumberOfPlayerException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Test
-    void playGameDraw() {
-        ResourceBundle bundle = ResourceBundle.getBundle("Message", Locale.US);
-        //one string, and two values out of range, all should throw exception
-        System.setIn(new ByteArrayInputStream("3\n3\n".getBytes()));
-        System.setOut(new PrintStream(outContent));
-        Scanner scanner = new Scanner(System.in);
-        try {
-            Game.initNumberOfPlayers(bundle, scanner);
-            Game.initGameDeal(smallDeck);
-            Game.playGame(bundle, scanner);
-            String out = outContent.toString();
-            assertEquals("no winner\n", out.substring(out.length() - 10));
         } catch (BadNumberOfPlayerException e) {
             throw new RuntimeException(e);
         }

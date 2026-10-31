@@ -19,13 +19,15 @@
 
 package org.ausderau.utils;
 
+/**
+ * Exception thrown if the number of players for the game is not correct
+ */
 public class BadNumberOfPlayerException extends Exception {
 
+    /**
+     * Constructs the exception to be thrown if the number of player is not correct
+     */
     public BadNumberOfPlayerException() {
         super("Number of player expected to be between 2 to 10");
-    }
-
-    public BadNumberOfPlayerException(String errorMessage, Throwable error) {
-        super(errorMessage, error);
     }
 }
