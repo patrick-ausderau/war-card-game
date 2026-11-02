@@ -32,7 +32,7 @@ To build and run the application, the following dependencies are required:
 ### Install
 
 1. clone this repo
-2. in a terminal go to the cloned repo `cd ~/<download folder>/war` 
+2. in a terminal go to the cloned repo `cd ~/<download folder>/war`
 3. rename the `hibernate.propreties.sample` file to `hibernate.propreties`
    ```console
    mv src/main/resources/hibernate.properties.sample src/main/resources/hibernate.properties
@@ -48,22 +48,22 @@ To build and run the application, the following dependencies are required:
 
 ### Game winning condition
 
-Normally the winner is the player who collects all the cards. However, if there is a war and a player has no more 
-cards in its hand, he can't participate in it. In that case, it was decided to end the game with a draw, i.e. no 
+Normally the winner is the player who collects all the cards. However, if there is a war and a player has no more
+cards in its hand, he can't participate in it. In that case, it was decided to end the game with a draw, i.e. no
 winner.
 
-Other options would have been to allow the player with no cards in hand to use the card at war as her/his second 
+Other options would have been to allow the player with no cards in hand to use the card at war as her/his second
 card. Or, allow him to randomly pick one card from his opponent.
 
-If the player with no cards in hand would be declared as a looser, then we could give her/his cards to the winner of 
+If the player with no cards in hand would be declared as a looser, then we could give her/his cards to the winner of
 the war; but we can face the risk of a multiple war where e.g. in a 5 players game having player1, player3 and player4
-with only one king card in hand and players 2 and 5 playing a smaller card in this trick… 
+with only one king card in hand and players 2 and 5 playing a smaller card in this trick…
 
-From the implementation point of view, the hand is stored as a `Queue` for FIFO operations and there is a double 
+From the implementation point of view, the hand is stored as a `Queue` for FIFO operations and there is a double
 safety. First, when playing the top card, it uses the `poll()` that returns `null` instead of `remove()` to avoid
 throwing an exception. And before playing it there is a second check if the queue `!isEmpty()`.
 
 ### Contribute
 
-This project was made as a java + maven + hibernate demo. It might not be developed further. If you want to modify 
-it, feel free to fork it and do whatever you like as long as 
+This project was made as a java + maven + hibernate demo. It might not be developed further. If you want to modify
+it, feel free to fork it and do whatever you like as long as you follow the GPL license.
