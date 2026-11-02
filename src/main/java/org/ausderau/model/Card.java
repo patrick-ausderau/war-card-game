@@ -71,15 +71,6 @@ public class Card {
     }
 
     /**
-     * Returns the unique identifier for this card.
-     *
-     * @return the card's database identifier
-     */
-    public long getId() {
-        return id;
-    }
-
-    /**
      * Returns the value of the card.
      *
      * @return the integer card's value: ace -> 13, king -> 12, queen -> 11,…
@@ -89,48 +80,12 @@ public class Card {
     }
 
     /**
-     * Replace the value of the card.
-     *
-     * @param value value to be set: ace -> 13, king -> 12, queen -> 11,…
-     */
-    public void setValue(int value) {
-        this.value = value;
-    }
-
-    /**
-     * Returns the color's name of the card.
-     *
-     * @return the color of the card
-     */
-    public String getColor() {
-        return color;
-    }
-
-    /**
-     * Replace the color of the card.
-     *
-     * @param color color's name to be set, one of 'club', 'diamond', 'heart' or 'spade'
-     */
-    public void setColor(String color) {
-        this.color = color;
-    }
-
-    /**
      * Returns the display's character of the card.
      *
      * @return the display's character of the card
      */
     public String getDisplay() {
         return display;
-    }
-
-    /**
-     * Replace the display's character of the card.
-     *
-     * @param display display's character to be set, like '🂡', '🂽', '🃇', '🃚',…
-     */
-    public void setDisplay(String display) {
-        this.display = display;
     }
 
     /**

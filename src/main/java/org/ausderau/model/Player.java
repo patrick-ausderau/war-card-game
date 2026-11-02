@@ -48,7 +48,7 @@ public class Player {
      * player's played cards during a trick
      */
     @Transient
-    private List<Card> trickCards = new LinkedList<>();
+    private final List<Card> trickCards = new LinkedList<>();
 
     /**
      * Constructs an empty player.
@@ -75,29 +75,12 @@ public class Player {
     }
 
     /**
-     * Returns the unique identifier of the player.
-     * @return the player's database identifier
-     */
-    public long getId() {
-        return id;
-    }
-
-    /**
      * Returns the name of the player.
      *
      * @return the player's name.
      */
     public String getName() {
         return name;
-    }
-
-    /**
-     * Replace the player's name.
-     *
-     * @param name the name of the player to be set
-     */
-    public void setName(String name) {
-        this.name = name;
     }
 
     /**
@@ -126,15 +109,6 @@ public class Player {
      */
     public List<Card> getTrickCards() {
         return trickCards;
-    }
-
-    /**
-     * Replace the cards played for a trick by the player.
-     *
-     * @param trickCards the list of cards play during a trick
-     */
-    public void setTrickCards(List<Card> trickCards) {
-        this.trickCards = trickCards;
     }
 
     /** Add many cards at the end of the player's hand.

@@ -104,15 +104,6 @@ public class Statistics {
     }
 
     /**
-     * Replaces the date when the game was played.
-     *
-     * @param date the date when the game was played to be set
-     */
-    public void setDate(LocalDateTime date) {
-        this.date = date;
-    }
-
-    /**
      * Returns the winner of the game if any.
      *
      * @return the player's name who win the game or an empty string if the game ended in a draw
@@ -140,30 +131,12 @@ public class Statistics {
     }
 
     /**
-     * Replaces the number of tricks played during this game.
-     *
-     * @param numberOfTricks the number of tricks played to be set
-     */
-    public void setNumberOfTricks(long numberOfTricks) {
-        this.numberOfTricks = numberOfTricks;
-    }
-
-    /**
      * Returns the number of wars played during a game
      *
      * @return the amount of wars played
      */
     public long getNumberOfWars() {
         return numberOfWars;
-    }
-
-    /**
-     * Replaces the number of wars played during a game
-     *
-     * @param numberOfWars the number of war to be set
-     */
-    public void setNumberOfWars(long numberOfWars) {
-        this.numberOfWars = numberOfWars;
     }
 
     /**
@@ -176,30 +149,12 @@ public class Statistics {
     }
 
     /**
-     * Replaces the list of players who played that game.
-     *
-     * @param players the list of player to be set
-     */
-    public void setPlayers(List<Player> players) {
-        this.players = players;
-    }
-
-    /**
      * Returns the shuffled deck used during that game.
      *
      * @return the ordered list of cards
      */
     public List<Card> getDeck() {
         return deck;
-    }
-
-    /**
-     * Replace the shuffled deck used during that game.
-     *
-     * @param deck the list of cards to be set
-     */
-    public void setDeck(List<Card> deck) {
-        this.deck = deck;
     }
 
     /**
